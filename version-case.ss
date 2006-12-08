@@ -1,6 +1,8 @@
 (module version-case mzscheme 
   (require-for-syntax (lib "stx.ss" "syntax"))
   
+  (provide version-case)
+  
   ;; version-case: SYNTAX
   ;; Conditionally include code based on current version number.
   ;; Usage:
@@ -29,7 +31,7 @@
         (eval '(define-struct mz-version (major minor)))
         
         ;; string->mz-version : string -> mz-version | #f
-        (eval '(define (string->mz-version str)
+        (eval '(define (string->version str)
                  (let ((ver (regexp-match #rx"^([0-9]+)(\\.([0-9]+))?$" str)))
                    (if ver
                        (make-mz-version
