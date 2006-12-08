@@ -1,0 +1,7 @@
+(module info (lib "infotab.ss" "setup")
+  (define name "version-case")
+  (define blurb '("version-case: conditional code based on mzscheme version"))
+  (define categories '(misc))
+  (define doc.txt "doc.txt")
+  (define primary-file "version-case.ss")
+  (define version "1.0"))

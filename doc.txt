@@ -1,0 +1,100 @@
+_infix.ss_: _infix_ expressions for PLT Scheme
+
+Danny Yoo (dyoo@hkn.eecs.berkeley.edu / dyoo@wpi.edu)
+       
+
+Quick Example
+-------------
+
+    > (require (planet "infix.ss" ("dyoo" "infix.plt" 1 0)))
+
+    > (infix 3 * 5 + 4 * 6 + ((7 + 8) * 9))
+    174
+
+    > (define (sq x) (* x x))
+    > (infix sqrt(sq(3) + sq(4)))
+    5
+
+    > (define (in-half-open? x a b)
+        (infix a <= x < b))
+    > (in-half-open? 3 1 10)
+    #t
+    > (in-half-open? 3 1 2)
+    #f  
+    
+
+This pretty much covers what infix does.
+
+Syntax
+------
+
+    (infix ...)
+
+    which expands whatever is in '...' into equivalent Scheme syntax.
+
+
+Expression types handled by infix
+---------------------------------
+
+    * Arithmetic expressions involving +, -, *, /, all with standard
+      precedences.
+      
+      
+    * Superfluously parenthesised expressions.  (((((a))))) ==> a
+      
+    
+    * Procedure calls in the unholy style.
+
+      f(x, y, ...)  ==>  (f x y ...)
+      
+      (Yes, I'm abusing UNQUOTE.)
+      
+      
+    * Chained comparisons.  (<, <=, =, >, >=) 
+      Left to right, with quick escape if any comparison fails.
+     
+      (infix a <= b < c)  
+     
+      expands to the equivalent code:
+     
+      (let ([tmp b])
+        (if (<= a tmp)
+            (if (< tmp c)
+                #t
+                #f)
+            #f))
+
+      
+Caveats
+-------
+
+I try to maintain lexical scope, so if the arithmetic or comparison operators
+are rebound, infix doesn't works on them.  I might make another release to
+give infix a more programmable syntax, but I don't want to take this joke that far yet.
+
+
+    
+Bugs
+----
+
+Syntax location information isn't as preserved as it should be.  I need
+another macrology lesson to make sure I understand how to do this.
+
+
+    
+Thanks (and apologies)
+------
+
+Thanks to Guillaume Marceau, Dan Dougherty, Kathi Fisler, and everyone
+involved with PLT.  I hope people can forgive me this joke.
+
+
+
+References
+----------
+
+mzscheme reference manual: http://download.plt-scheme.org/doc/360/html/mzscheme/
+
+parser-tools: http://ja.soegaard.net/planet/html/collects/parser-tools/doc.txt
+
+chained comparisons/python reference manual: http://docs.python.org/ref/comparisons.html
