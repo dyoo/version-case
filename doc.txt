@@ -1,100 +1,66 @@
-_infix.ss_: _infix_ expressions for PLT Scheme
+_version-case_ : conditionally compile code based on current version number.
 
-Danny Yoo (dyoo@hkn.eecs.berkeley.edu / dyoo@wpi.edu)
-       
+Danny Yoo (dyoo@hkn.eecs.berkeley.edu / dyoo@wpi.edu)                
+                
 
-Quick Example
--------------
+Example
+=======
 
-    > (require (planet "infix.ss" ("dyoo" "infix.plt" 1 0)))
-
-    > (infix 3 * 5 + 4 * 6 + ((7 + 8) * 9))
-    174
-
-    > (define (sq x) (* x x))
-    > (infix sqrt(sq(3) + sq(4)))
-    5
-
-    > (define (in-half-open? x a b)
-        (infix a <= x < b))
-    > (in-half-open? 3 1 10)
-    #t
-    > (in-half-open? 3 1 2)
-    #f  
+(module some-sample-unit-code mzscheme
+  (require "version-case.ss"
+           (lib "mred.ss" "mred"))
+  
+  ;; Small test code to see that we can write unit-dependent code
+  ;; that still runs under both 360 and 369.
+  
+  (version-case
+   [(version<= (version) "369")
+    (printf "old unit code~n")
+    (require (lib "tool.ss" "drscheme")
+             (lib "unitsig.ss"))
     
+    (define tool@
+      (unit/sig drscheme:tool-exports^
+        (import drscheme:tool^)
+        (define (phase1)
+          (message-box "phase1"))
+        (define (phase2)
+          (message-box "phase2"))))]
+   
+   [else
+    (printf "new unit code~n")
+    (require (lib "tool.ss" "drscheme")
+             (lib "unit.ss"))
+    (define-unit tool@
+      (import drscheme:tool^)
+      (export drscheme:tool-exports^)
+      (define (phase1)
+        (message-box "phase1"))
+      (define (phase2)
+        (message-box "phase2")))]))
 
-This pretty much covers what infix does.
+                
+Usage
+=====
 
-Syntax
-------
+_version-case_ : SYNTAX
 
-    (infix ...)
+    (version-case [test code ...]
+                  ... 
+                  [else code ...])
 
-    which expands whatever is in '...' into equivalent Scheme syntax.
+Expands out to one of the CODE blocks, depending on which test succeeds first.
+The test expression has access to the mzscheme primitives.  In addition,
+one other function, VERSION<=, is made available for convenience.
 
-
-Expression types handled by infix
----------------------------------
-
-    * Arithmetic expressions involving +, -, *, /, all with standard
-      precedences.
-      
-      
-    * Superfluously parenthesised expressions.  (((((a))))) ==> a
-      
-    
-    * Procedure calls in the unholy style.
-
-      f(x, y, ...)  ==>  (f x y ...)
-      
-      (Yes, I'm abusing UNQUOTE.)
-      
-      
-    * Chained comparisons.  (<, <=, =, >, >=) 
-      Left to right, with quick escape if any comparison fails.
-     
-      (infix a <= b < c)  
-     
-      expands to the equivalent code:
-     
-      (let ([tmp b])
-        (if (<= a tmp)
-            (if (< tmp c)
-                #t
-                #f)
-            #f))
-
-      
-Caveats
--------
-
-I try to maintain lexical scope, so if the arithmetic or comparison operators
-are rebound, infix doesn't works on them.  I might make another release to
-give infix a more programmable syntax, but I don't want to take this joke that far yet.
+    ;; version<=: string string -> boolean
+    ;; Returns true if the strings, treated as version strings "major.minor",
+    ;; compare as <=.
 
 
-    
-Bugs
-----
+Bugs / Gotchas
+==============
 
-Syntax location information isn't as preserved as it should be.  I need
-another macrology lesson to make sure I understand how to do this.
-
-
-    
-Thanks (and apologies)
-------
-
-Thanks to Guillaume Marceau, Dan Dougherty, Kathi Fisler, and everyone
-involved with PLT.  I hope people can forgive me this joke.
-
-
-
-References
-----------
-
-mzscheme reference manual: http://download.plt-scheme.org/doc/360/html/mzscheme/
-
-parser-tools: http://ja.soegaard.net/planet/html/collects/parser-tools/doc.txt
-
-chained comparisons/python reference manual: http://docs.python.org/ref/comparisons.html
+The tests are done at compile time, in the standard mzscheme environment built with
+(make-namespace).  Also, if the test itself raises exceptions, the error messages
+aren't that good.
