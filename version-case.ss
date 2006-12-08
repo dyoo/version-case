@@ -13,23 +13,11 @@
   ;;               [else ...])
   ;;
   ;; where clause has access to the mzscheme primitives.  In addition,
-  ;; the following two functions are available:
+  ;; the following function is available:
   ;;
-  ;;     string->version: string -> version
-  ;;
-  ;;     version<=: version version -> boolean
+  ;;     version<=: string string -> boolean
   ;;
   ;; to make it easier to build the conditional clauses.
-  
-  
-  
-  ;; The defininitions of mz-version, string->mz-version, and version<= were
-  ;; adapted (copied and pasted) from PLaneT's implementation
-  ;; (planet/private/planet-shared.ss).
-  ;; string->version : string -> mz-version | #f
-  ;; version<= : string string -> boolean
-  ;; determines if a is the version string of an earlier mzscheme release than b ;; [n.b. this relies on a guarantee from Matthew that mzscheme version
-  ;; x1.y1 is older than version x2.y2 iff x1<x2 or x1=x2 and y1<y2]
   
   
   (define-syntax (version-case stx)
