@@ -6,7 +6,7 @@
   ;; that still runs under both 360 and 369.
   
   (version-case
-   [(version<= (version) "369")
+   [(version<= (version) "360")
     (printf "old unit code~n")
     (require (lib "tool.ss" "drscheme")
              (lib "unitsig.ss"))
