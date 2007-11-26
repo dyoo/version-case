@@ -7,7 +7,7 @@ Example
 =======
 
 (module some-sample-unit-code mzscheme
-  (require (planet "version-case.ss" ("dyoo" "version-case.plt" 1 0))
+  (require (planet "version-case.ss" ("dyoo" "version-case.plt" 1 1))
            (lib "mred.ss" "mred"))
   
   ;; Small test code to see that we can write unit-dependent code

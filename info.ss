@@ -4,4 +4,5 @@
   (define categories '(misc))
   (define doc.txt "doc.txt")
   (define primary-file "version-case.ss")
-  (define version "1.0"))
+  (define release-notes '("mzscheme 3.99 compatibility"))
+  (define version "1.1"))
