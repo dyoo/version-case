@@ -1,7 +1,7 @@
 (module version-misc mzscheme
   (require (lib "string.ss")
            (lib "list.ss")
-           (prefix 67: (lib "67.s" "srfi"))
+           (prefix 67: (lib "67.ss" "srfi"))
            (prefix 1: (lib "1.ss" "srfi")))
   
   (provide version<=)
