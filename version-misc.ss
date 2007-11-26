@@ -1,6 +1,7 @@
 (module version-misc mzscheme
   (require (lib "string.ss")
            (lib "list.ss")
+           (prefix 67: (lib "67.s" "srfi"))
            (prefix 1: (lib "1.ss" "srfi")))
   
   (provide version<=)
@@ -10,12 +11,12 @@
   ;; version<= were adapted (copied and pasted) from PLaneT's
   ;; implementation in (planet/private/planet-shared.ss).
   
-  (define-struct mz-version (major minor maintenances) #f)
+  (define-struct mz-version (numbers) #f)
   
   ;; string->version : string -> mz-version | #f
   (define (string->version str)
     (cond
-      ;; Old style numbering
+      ;; Old style numbering (with three digits in front)
       [(regexp-match #rx"^([0-9][0-9][0-9])([.0-9]*)$" str)
        =>
        (lambda (ver)
@@ -27,28 +28,18 @@
                            (first after-major)
                            0)]
                 [maintenances (drop after-major 1)])
-           (make-mz-version major
-                            minor
-                            maintenances)))]
-      
+           (make-mz-version (list*
+                             (remainder (quotient major 100) 10)
+                             (remainder (quotient major 10) 10)
+                             (remainder major 10)
+                             minor
+                             maintenances))))]
       ;; New style numbering
-      [(regexp-match #rx"^([0-9])([.0-9]*)$" str)
+      [(regexp-match #rx"^([.0-9]*)$" str)
        =>
        (lambda (ver)
-         (let* ([major (string->number (list-ref ver 1))]
-                [after-major
-                 (map string->number
-                      (rest (regexp-split "\\." (list-ref ver 2))))]
-                [sub-major (if (>= (length after-major) 1)
-                           (first after-major)
-                           0)]
-                [minor (if (> (length (drop after-major 1)) 0)
-                           (first (drop after-major 1))
-                           0)]
-                [maintenances (drop after-major 2)])
-           (make-mz-version (+ (* 100 major) sub-major)
-                            minor
-                            maintenances)))]
+         (let* ([numbers (regexp-split "\\." (list-ref ver 1))])
+           (make-mz-version (map string->number numbers))))]
       [else #f]))
   
   
@@ -59,18 +50,23 @@
     (1:drop a-list (min n (length a-list))))
   
   
+  
+  ;; version-cmp: mz-version mz-version -> (union -1 0 1)
+  ;; Returns -1 if v1 < v2, 0 if v1 = v2, and 1 if v1 > v2.
+  (define (version-cmp v1 v2)
+    (67:list-compare 67:integer-compare
+                     (mz-version-numbers v1)
+                     (mz-version-numbers v2)))
+  
+  
   ;; version<= : string string -> boolean
   ;; determines if a is the version string of an earlier
   ;; mzscheme release than b
   ;; [n.b. this relies on a guarantee from Matthew that
   ;; mzscheme version x1.y1 is older than version x2.y2 iff
   ;;  x1<x2 or x1=x2 and y1<y2]
-  ;;
-  ;; WARNING: currently, we do not discriminate with
-  ;; maintenance numbers.
   (define (version<= a b)
     (let ([a (string->version a)]
           [b (string->version b)])
-      (or (<= (mz-version-major a) (mz-version-major b))
-          (and (= (mz-version-major a) (mz-version-major b))
-               (<= (mz-version-minor a) (mz-version-minor b)))))))
+      (not (= (version-cmp a b)
+              1)))))
