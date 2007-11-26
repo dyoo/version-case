@@ -5,4 +5,4 @@
   (define doc.txt "doc.txt")
   (define primary-file "version-case.ss")
   (define release-notes '("mzscheme 3.99 compatibility"))
-  (define version "1.1"))
+  (define version "1.2"))
