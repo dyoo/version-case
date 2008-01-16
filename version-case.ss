@@ -13,9 +13,10 @@
   ;;               [else ...])
   ;;
   ;; where clause has access to the mzscheme primitives.  In addition,
-  ;; the following function is available:
+  ;; the following functions are available:
   ;;
   ;;     version<=: string string -> boolean
+  ;;     version>=: string string -> boolean
   ;;
   ;; to make it easier to build the conditional clauses.
   
@@ -32,6 +33,8 @@
                                                        (exn-message exn))
                                                condition-stx))])
           (eval `(define version<= ,version<=))
+          (eval `(define version>= ,version>=))
+          (eval `(define version= ,version=))
           (eval condition-stx))))
     
     (syntax-case* stx (else) module-or-top-identifier=?

@@ -51,11 +51,15 @@ _version-case_ : SYNTAX
 
 Expands out to one of the CODE blocks, depending on which test succeeds first.
 The test expression has access to the mzscheme primitives.  In addition,
-one other function, VERSION<=, is made available for convenience.
+some version-comparing functions, are available for convenience.
 
     ;; version<=: string string -> boolean
     ;; Returns true if the strings, treated as version strings "major.minor",
     ;; compare as <=.
+
+    ;; version>=: string string -> boolean
+
+    ;; version=: string string -> boolean
 
 
 Bugs / Gotchas
