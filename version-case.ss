@@ -17,6 +17,9 @@
   ;;
   ;;     version<=: string string -> boolean
   ;;     version>=: string string -> boolean
+  ;;     version=: string string -> boolean
+  ;;     version<: string string -> boolean
+  ;;     version>: string string -> boolean
   ;;
   ;; to make it easier to build the conditional clauses.
   
@@ -35,6 +38,9 @@
           (eval `(define version<= ,version<=))
           (eval `(define version>= ,version>=))
           (eval `(define version= ,version=))
+          (eval `(define version< ,version<))
+          (eval `(define version> ,version>))
+
           (eval condition-stx))))
     
     (syntax-case* stx (else) module-or-top-identifier=?

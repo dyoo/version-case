@@ -4,7 +4,7 @@
            (prefix 67: (lib "67.ss" "srfi"))
            (prefix 1: (lib "1.ss" "srfi")))
   
-  (provide version<= version>= version=)
+  (provide version<= version>= version= version< version>)
   
   
   ;; The definitions of mz-version, string->version, and
@@ -81,4 +81,16 @@
     (let ([a (string->version a)]
           [b (string->version b)])
       (= (version-cmp a b)
-         0))))
+         0)))
+
+  (define (version< a b)
+    (let ([a (string->version a)]
+          [b (string->version b)])
+      (= (version-cmp a b)
+         -1)))
+
+  (define (version> a b)
+    (let ([a (string->version a)]
+          [b (string->version b)])
+      (= (version-cmp a b)
+         1))))

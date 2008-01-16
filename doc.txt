@@ -58,8 +58,9 @@ some version-comparing functions, are available for convenience.
     ;; compare as <=.
 
     ;; version>=: string string -> boolean
-
     ;; version=: string string -> boolean
+    ;; version<: string string -> boolean
+    ;; version>: string string -> boolean
 
 
 Bugs / Gotchas
