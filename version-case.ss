@@ -1,8 +1,10 @@
-(module version-case mzscheme 
-  (require-for-syntax "version-misc.ss"
-                      (lib "stx.ss" "syntax"))
+(module version-case mzscheme
+    
+  #;(require-for-syntax "version-misc.ss")
   
   (provide version-case)
+
+  #'(provide (for-syntax (all-from "version-misc.ss")))
   
   
   ;; version-case: SYNTAX
@@ -24,34 +26,34 @@
   ;; to make it easier to build the conditional clauses.
   
   
+  (define-for-syntax (loop stx clauses)
+    (syntax-case clauses ()
+      [()
+       (raise-syntax-error #f "no matching version condition" stx)]
+      [([test code ...] ...)
+       (with-syntax ([name (syntax/loc clauses the-macro)]
+                     [transformer
+                      (syntax/loc stx
+                        (lambda (stx*)
+                          (cond [test
+                                 (syntax-local-introduce
+                                  (syntax/loc stx* 
+                                    (begin code ...)))]
+                                ...)))])
+         (case (syntax-local-context)
+           [(expression)
+            (syntax/loc stx
+              (let-syntax ([name transformer])
+                (name)))]
+           [else
+            (syntax/loc stx
+              (begin
+                (define-syntax name transformer)
+                (name)))]))]))
+  
+  
+  
   (define-syntax (version-case stx)
-    (define (eval-condition condition-stx)
-      ;; TODO: should we do this more safely or in a more
-      ;; controlled fashion?
-      (parameterize ([current-namespace (make-namespace)])
-        (with-handlers ([exn:fail?
-                         (lambda (exn)
-                           (raise-syntax-error #f
-                                               (format "exn raised during compilation: ~a"
-                                                       (exn-message exn))
-                                               condition-stx))])
-          (eval `(define version<= ,version<=))
-          (eval `(define version>= ,version>=))
-          (eval `(define version= ,version=))
-          (eval `(define version< ,version<))
-          (eval `(define version> ,version>))
-
-          (eval condition-stx))))
-    
-    (syntax-case* stx (else) module-or-top-identifier=?
-      [(_ [else code ...])
-       (syntax/loc stx
-         (begin code ...))]
-      [(_ [condition code ...] other-clauses ...)
-       (if (eval-condition (syntax condition))
-           (syntax/loc stx
-             (begin code ...))
-           (syntax/loc stx
-             (version-case other-clauses ...)))]
-      [(_)
-       (raise-syntax-error #f "no matching version condition" stx)])))
+    (syntax-case stx ()
+      [(_ clauses ...)
+       (loop stx #'(clauses ...))])))
