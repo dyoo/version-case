@@ -3,7 +3,6 @@
   (require-for-syntax "version-misc.ss")
   
   
-  
   ;; version-case: SYNTAX
   ;; Conditionally include code based on current version number.
   ;; Usage:
@@ -31,6 +30,8 @@
       (syntax/loc stx
         (begin
           (provide-for-syntax (all-from "version-misc.ss"))
+          (require-for-syntax (prefix 399: scheme/base))
+          (provide-for-syntax (rename 399:else else))
           (define-syntax (version-case stx)
             (syntax-case stx ()
               [(_ [test code (... ...)] (... ...))
@@ -39,10 +40,10 @@
                              [transformer
                               (syntax/loc stx
                                 (lambda (stx*)
-                                  (cond [test
-                                         (syntax-local-introduce
-                                          (syntax/loc stx* (begin code (... ...))))]
-                                        (... ...))))])
+                                  (399:cond [test
+                                             (syntax-local-introduce
+                                              (syntax/loc stx* (begin code (... ...))))]
+                                            (... ...))))])
                  (case (syntax-local-context)
                    [(expression)
                     (syntax/loc stx
@@ -66,6 +67,7 @@
     (with-syntax ([version-case (datum->syntax-object stx 'version-case)])
       (syntax/loc stx
         (begin
+          (require-for-syntax "version-misc.ss")
           (require-for-syntax (lib "stx.ss" "syntax"))
           (define-syntax (version-case stx)
             (define (eval-condition condition-stx)
@@ -104,7 +106,7 @@
   ;; We choose at compile time of version-case which implementation can be used.
   (define-syntax (choose-version-case-implementation stx)
     (cond
-      [(version< (version) "372")
+      [(version< (version) "399")
        (old-implementation stx)]
       [else
        (new-implementation stx)]))
