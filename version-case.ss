@@ -23,6 +23,8 @@
   ;; to make it easier to build the conditional clauses.
   
   
+  (define-for-syntax usage-message "Usage: (version-case [test code] ... [else ...]))")
+  
   ;; The new implementation is thanks to Carl Eastlund.
   (define-for-syntax (new-implementation stx)
     (with-syntax ([version-case (datum->syntax-object stx 'version-case)])
@@ -32,6 +34,7 @@
           (define-syntax (version-case stx)
             (syntax-case stx ()
               [(_ [test code (... ...)] (... ...))
+               (not (null? (syntax->list (syntax ((test code (... ...)) (... ...))))))
                (with-syntax ([name (syntax/loc stx the-macro)]
                              [transformer
                               (syntax/loc stx
@@ -49,7 +52,12 @@
                     (syntax/loc stx
                       (begin
                         (define-syntax name transformer)
-                        (name)))]))]))))))
+                        (name)))]))]
+              [else
+               (raise-syntax-error 
+                #f 
+                usage-message
+                stx)]))))))
   
   
   ;; The old version uses eval because I haven't figured out a good way to expose the
@@ -58,6 +66,7 @@
     (with-syntax ([version-case (datum->syntax-object stx 'version-case)])
       (syntax/loc stx
         (begin
+          (require-for-syntax (lib "stx.ss" "syntax"))
           (define-syntax (version-case stx)
             (define (eval-condition condition-stx)
               ;; TODO: should we do this more safely or in a more
@@ -88,7 +97,7 @@
                    (syntax/loc stx
                      (version-case other-clauses (... ...))))]
               [(_)
-               (raise-syntax-error #f "no matching version condition" stx)]))))))
+               (raise-syntax-error #f usage-message stx)]))))))
     
   
   
