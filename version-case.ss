@@ -31,7 +31,10 @@
         (begin
           (provide-for-syntax (all-from "version-misc.ss"))
           (require-for-syntax (prefix 399: scheme/base))
-          (provide-for-syntax (rename 399:else else))
+          (provide-for-syntax (rename 399:else else)
+                              (rename 399:#%app #%app)
+                              (rename 399:version version)
+                              (rename 399:#%datum #%datum))
           (define-syntax (version-case stx)
             (syntax-case stx ()
               [(_ [test code (... ...)] (... ...))
