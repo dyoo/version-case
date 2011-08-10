@@ -3,6 +3,7 @@
           (for-label racket/base)
           (for-label (this-package-in version-case)))
 
+
 @title{version-case: conditionally compile code based on current version number}
                 
 
@@ -65,20 +66,17 @@ Another simple example:
 
 
 @section{Usage}
-
 @defmodule/this-package[main]
-
-@schemeblock[
-(version-case [test code ...]
-              ... 
-              [else code ...])
-]
-
+@declare-exporting/this-package[version-case]
+@defform[(version-case [test code ...]
+                       ... 
+                       [else code ...])]
 @scheme[version-case] is a macro that expands out to one of the
 @scheme[code] blocks, depending on which test succeeds first.  The
 @scheme[test] expression is evaluated at compile-time.  Some
 version-comparing functions are available for convenience.
 
+@declare-exporting/this-package[version-misc]
 @defproc[(version< [v1 string?] [v2 string?]) boolean?]{
 Returns true if @scheme[v1] is less than @scheme[v2].
 }
