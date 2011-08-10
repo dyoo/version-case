@@ -67,7 +67,7 @@ Another simple example:
 
 
 @section{Usage}
-@declare-exporting/this-package[main]
+@defmodule/this-package[main]
 @defform[(version-case [test code ...]
                        ... 
                        [else code ...])]
