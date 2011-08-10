@@ -1,8 +1,7 @@
-#lang scribble/doc
-@(require scribble/manual
-          (for-label scheme)
-          (for-label "version-misc.ss")
-          (for-label "version-case.ss"))
+#lang scribble/manual
+@(require planet/scribble
+          (for-label racket/base)
+          (for-label (this-package-in version-case)))
 
 @title{version-case: conditionally compile code based on current version number}
                 
@@ -55,17 +54,19 @@ with both the old and new @scheme[unit] libraries.
                 
 
 Another simple example:
-@schemeblock[
-(module another-example scheme/base
-  (require (planet dyoo/version-case)
-           (for-syntax scheme/base))
-  (printf "~a~n" (version-case [(version<= (version) "4")
-                                'huh?]
-                               [else
-                                'ok])))]
+@codeblock|{
+#lang racket/base
+(require (planet dyoo/version-case)
+         (for-syntax scheme/base))
+(printf "~a~n" (version-case [(version<= (version) "4")
+                              'huh?]
+                             [else
+                              'ok]))}|
 
 
 @section{Usage}
+
+@defmodule/this-package[main]
 
 @schemeblock[
 (version-case [test code ...]
@@ -78,7 +79,6 @@ Another simple example:
 @scheme[test] expression is evaluated at compile-time.  Some
 version-comparing functions are available for convenience.
 
-@declare-exporting[version-case/version-misc]
 @defproc[(version< [v1 string?] [v2 string?]) boolean?]{
 Returns true if @scheme[v1] is less than @scheme[v2].
 }
