@@ -1,11 +1,11 @@
-#lang scheme/base
+#lang racket/base
 
-(require (for-syntax scheme/base)
-         (for-syntax scheme/bool)
-         (for-syntax "../version-misc.ss"))
+(require (for-syntax racket/base)
+         (for-syntax racket/bool)
+         (for-syntax "../version-misc.rkt"))
 
 
-(provide (for-syntax (all-from-out "../version-misc.ss")))
+(provide (for-syntax (all-from-out "../version-misc.rkt")))
 (provide version-case)
 
 

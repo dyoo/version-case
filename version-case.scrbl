@@ -67,7 +67,7 @@ Another simple example:
 
 
 @section{Usage}
-@defmodule/this-package[main]
+@declare-exporting/this-package[main]
 @defform[(version-case [test code ...]
                        ... 
                        [else code ...])]
@@ -76,7 +76,6 @@ Another simple example:
 @racket[test] expression is evaluated at compile-time.  Some
 version-comparing functions are available for convenience.
 
-@declare-exporting/this-package[version-misc]
 @defproc[(version< [v1 string?] [v2 string?]) boolean?]{
 Returns true if @racket[v1] is less than @racket[v2].
 }
