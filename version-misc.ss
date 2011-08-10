@@ -1,10 +1,15 @@
 (module version-misc mzscheme
   (require (lib "string.ss")
            (lib "list.ss")
+           (lib "contract.ss")
            (prefix 67: (lib "67.ss" "srfi"))
            (prefix 1: (lib "1.ss" "srfi")))
-  
-  (provide version<= version>= version= version< version>)
+
+  (provide/contract [version<= (string? string? . -> . boolean?)]
+                    [version< (string? string? . -> . boolean?)]
+                    [version= (string? string? . -> . boolean?)]
+                    [version>= (string? string? . -> . boolean?)]
+                    [version> (string? string? . -> . boolean?)])
   
   
   ;; The definitions of mz-version, string->version, and

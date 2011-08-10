@@ -1,11 +1,28 @@
 (module test-version-case mzscheme
-  
   (require "version-case.ss"
            (lib "mred.ss" "mred"))
   
   ;; Small test code to see that we can write unit-dependent code
   ;; that still runs under both 360 and 369.
   
+  ;; version-case should be usable in expression position
+  (printf "~s~n" (version-case [(version= (version) "360")
+                                  "360"]
+                                 [else
+                                  "something else"]))
+
+  
+  ;; Ellipses should work in a version case.
+  (printf "~s~n"
+          (map syntax-e (syntax->list
+                         (version-case 
+                          (#f blah)
+                          (else 
+                           (syntax-case (syntax (foo bar)) ()
+                             [(x ...) 
+                              (syntax (x ...))]))))))
+  ;; we expect '(foo bar)
+
   
   (version-case
    [(version<= (version) "360")
