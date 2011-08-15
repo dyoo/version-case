@@ -1,7 +1,7 @@
-#lang racket/base
+#lang scheme/base
 
-(require (for-syntax racket/base)
-         (for-syntax racket/bool)
+(require (for-syntax scheme/base)
+         (for-syntax scheme/bool)
          (for-syntax "../version-misc.ss"))
 
 

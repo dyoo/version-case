@@ -1,6 +1,6 @@
 (module test-version-case mzscheme
-  (require "version-case.ss"
-           racket/gui/base)
+  (require "version-case.ss")
+
 
   ;; Small test code to see that we can write unit-dependent code
   ;; that still runs under both 360 and 369.
@@ -27,7 +27,8 @@
   (version-case
    [(version<= (version) "360")
     (printf "old unit code~n")
-    (require (lib "tool.ss" "drscheme")
+    (require (lib "mred.ss" "mred")
+             (lib "tool.ss" "drscheme")
              (lib "unitsig.ss"))
     
     (define tool@
@@ -40,7 +41,8 @@
    
    [else
     (printf "new unit code~n")
-    (require (lib "tool.ss" "drscheme")
+    (require scheme/gui/base
+             (lib "tool.ss" "drscheme")
              (lib "unit.ss"))
     (define-unit tool@
       (import drscheme:tool^)
