@@ -1,5 +1,5 @@
 #lang racket/base
-(require (for-syntax "version-misc.rkt"
+(require (for-syntax "version-misc.ss"
                      racket/base))
 
 ;; version-case: SYNTAX
@@ -27,13 +27,13 @@
    [(version< (version) "399")
     (syntax/loc stx 
       (begin
-        (require "private/old-version-case.rkt")
-        (provide (all-from-out "private/old-version-case.rkt"))))]
+        (require "private/old-version-case.ss")
+        (provide (all-from-out "private/old-version-case.ss"))))]
    [else
     (syntax/loc stx
       (begin
-        (require "private/new-version-case.rkt")
-        (provide (all-from-out "private/new-version-case.rkt"))))]))
+        (require "private/new-version-case.ss")
+        (provide (all-from-out "private/new-version-case.ss"))))]))
 
 
 (choose-version-case-implementation)

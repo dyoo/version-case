@@ -1,5 +1,5 @@
 (module old-version-case mzscheme
-  (require-for-syntax (prefix m: "../version-misc.rkt"))
+  (require-for-syntax (prefix m: "../version-misc.ss"))
   (provide version-case)
 
   

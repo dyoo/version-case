@@ -2,10 +2,10 @@
 
 (require (for-syntax racket/base)
          (for-syntax racket/bool)
-         (for-syntax "../version-misc.rkt"))
+         (for-syntax "../version-misc.ss"))
 
 
-(provide (for-syntax (all-from-out "../version-misc.rkt")))
+(provide (for-syntax (all-from-out "../version-misc.ss")))
 (provide version-case)
 
 

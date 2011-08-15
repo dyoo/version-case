@@ -2,10 +2,8 @@
   (define name "version-case")
   (define blurb '("version-case: conditional code based on mzscheme version"))
   (define categories '(misc))
-
-  (define primary-file "version-case.ss")
+  (define primary-file "main.rkt")
   (define release-notes '("Fixed bug with embedding syntax-case within version-case expression."))
   (define version "1.8")
-  (define doc.txt "version-case.txt")
   (define repositories '("4.x"))
   (define scribblings '(("version-case.scrbl" ()))))
