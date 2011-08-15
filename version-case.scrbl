@@ -7,6 +7,10 @@
 @title{version-case: conditionally compile code based on current version number}
 @author+email["Danny Yoo" "dyoo@hashcollision.org"]                
 
+@centered{@smaller{Source code can be found at:
+@url{https://github.com/dyoo/version-case}.}}
+
+
 
 This library provides support for conditionally compiling code based
 on the version of Racket.  One common application of this module is to
